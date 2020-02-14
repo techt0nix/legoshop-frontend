@@ -4,7 +4,6 @@
             <div class="container">
                 <div class="top-header-main">
                     <div class="col-md-6 top-header-left">
-
                     </div>
                     <div class="col-md-6 top-header-left">
                         <div class="cart box_1">
@@ -24,7 +23,7 @@
         <!--top-header-->
         <!--start-logo-->
         <div class="logo">
-            <a href="#"><h1>LEGO TECHNIC</h1></a>
+            <router-link to="/"><h1>LEGO TECHNIC</h1></router-link>
         </div>
         <!--start-logo-->
         <!--bottom-header-->
@@ -33,7 +32,10 @@
                 <div class="header">
                     <div class="col-md-9 header-left">
                         <div class="top-nav">
-                            <ul class="memenu skyblue"><li class="active"><a href="#">Главная</a></li>
+                            <ul class="memenu skyblue">
+                                <li class="active">
+                                    <router-link to="/">Главная</router-link>
+                                </li>
                                 <li class="grid"><a href="#">Категории</a>
                                     <div class="mepanel">
                                         <div class="row">
