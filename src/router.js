@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import parts from './components/parts'
 import start from './components/start'
+import showcase from './components/showcase'
 
 Vue.use(Router)
 
@@ -10,8 +10,8 @@ export default new Router({
     routes: [
         {
             path: '/parts',
-            name: 'parts',
-            component: parts
+            name: 'showcase',
+            component: showcase
         },
 
         {
