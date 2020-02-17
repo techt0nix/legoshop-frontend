@@ -2230,7 +2230,7 @@ figure.effect-bubba p {
     width: 25%;
     float: left;
     padding: 0 8px;
-
+    
 }
 .mask img {
     width: 60%;
@@ -2768,6 +2768,7 @@ figure.effect-bubba p {
 .product-left {
     padding: 0 10px;
     width: 50%;
+    
 }
 .product-left:nth-child(3),.product-left:nth-child(4){
 	margin-top:20px;

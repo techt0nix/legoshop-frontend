@@ -15,13 +15,13 @@
             <div class="container">
                 <div class="prdt-top">
                     <div class="col-md-9 prdt-left" >
-                        <div class="product-one" id="cards">
-                            <div class="col-md-4 product-left p-left" th:each="model: ${parts}">
+                        <div class="product-one" id="cards" >
+                            <div class="col-md-4 product-left p-left" v-for="part in parts" v-match-heights="{el: ['h3']}">
                                 <div class="product-main simpleCart_shelfItem">
-                                    <a class="mask"><img class="img-responsive zoom-img" th:src="${model.imageName}" alt="" id="image"/></a>
+                                    <a class="mask"><img class="img-responsive zoom-img" img :src="part.imageName" alt="" id="image"/></a>
                                     <div class="product-bottom">
-                                        <h3 th:text="${model.engName}" id="engname"></h3>
-                                        <p th:text="${model.partNumber}" id="partnumber"></p>
+                                        <h3 id="engname">{{ part.engName }}</h3>
+                                        <p id="partnumber">{{ part.partNumber }}</p>
                                         <h4><a class="item_add" href="#"><i></i></a> <span class=" item_price">$ 329</span></h4>
                                     </div>
                                 </div>
@@ -100,6 +100,28 @@
 import {AXIOS} from './http-common'
 import {ADDRESS} from './backend-address'
 
+
+function createFullQueryParamsObject(queryParams, fetchedData) {
+    let fullQueryParams = {
+        category: queryParams.category,
+        page: fetchedData.data.number,
+        size: fetchedData.data.size,
+        sortby: ((queryParams.sortby != null || undefined) ? queryParams.sortby : 'id'),
+        order: ((queryParams.sortby != null || undefined) ? queryParams.order : 'asc')
+    }
+    setQueryParamsToStorage(fullQueryParams)
+    console.log(fullQueryParams)
+}
+
+function setQueryParamsToStorage(fullQueryParams) {
+    sessionStorage.setItem('fullQueryParams', JSON.stringify(fullQueryParams));
+}
+
+function getQueryParamsFromStorage() {
+    return JSON.parse(sessionStorage.getItem('fullQueryParams'));
+}
+
+
 export default {
     name: 'showcase',
 
@@ -111,11 +133,6 @@ export default {
     },
 
     methods: {
-        getQueryParams() {
-            let queryParams = this.$route.query;
-            console.log(this.$route.query)
-        },
-
         getCategoryById() {
             let categoryId = this.$route.query.category;
 
@@ -130,31 +147,31 @@ export default {
             })
         },
 
-        fetchPartsByCategory() {
+        fetchPartsOnLoadByCategory() {
             let queryParams = this.$route.query;
             
             AXIOS.get('/parts', { params: queryParams})
                 .then(res => {
                     console.log(res)
                     let parts = res.data.content
+                    createFullQueryParamsObject(queryParams, res)
 
                     for (let i in parts) {
                         parts[i].imageName = ADDRESS + parts[i].imageName
                     }
-
-                    console.log(parts)
                 
+                    console.log(parts)
+                    this.$data.parts = parts
                 })
                 .catch(err => {
                     console.error(err); 
                 })     
-        }
+        },      
     },
 
     mounted() {
-        this.getQueryParams();
         this.getCategoryById();
-        this.fetchPartsByCategory();
+        this.fetchPartsOnLoadByCategory();
     }
 }
 </script>
