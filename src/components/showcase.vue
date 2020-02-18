@@ -34,8 +34,10 @@
                             <section class="sky-form">
                                 <h4>Сортировка</h4>
                                 <div class="row1 row2 scroll-pane">
-                                    <div class="col col-4" th:each="sortOption: ${sortOptions}">
-                                        <label class="radio"><input type="radio" th:value="${sortOption.key}" name="sort" th:text="${sortOption.value}"><i></i></label>
+                                    <div class="col col-4">
+                                        <label class="radio"><input type="radio" value="id" name="sort">По id<i></i></label>
+                                        <label class="radio"><input type="radio" value="eng_name" name="sort">По имени<i></i></label>
+                                        <label class="radio"><input type="radio" value="part_number" name="sort">По парт номеру<i></i></label>
                                     </div>
                                 </div>
                             </section>
@@ -43,7 +45,8 @@
                                 <h4>Порядок</h4>
                                 <div class="row1 scroll-pane">
                                     <div class="col col-4" th:each="direction: ${directions}">
-                                        <label class="radio"><input type="radio" th:value="${direction.key}" name="order" th:text="${direction.value}"><i></i></label>
+                                        <label class="radio"><input type="radio" value="asc" name="order">По возрастанию<i></i></label>
+                                        <label class="radio"><input type="radio" value="desc" name="order">По убыванию<i></i></label>
                                     </div>
                                 </div>
                             </section>
@@ -51,7 +54,10 @@
                                 <h4>Показывать</h4>
                                 <div class="row1 scroll-pane">
                                     <div class="col col-4" th:each="pageSize: ${pageSizes}">
-                                        <label class="radio"><input type="radio" th:value="${pageSize.key}" name="size" th:text="${pageSize.value}"><i></i></label>
+                                        <label class="radio"><input type="radio" value="1" name="size">Показывать по 1<i></i></label>
+                                        <label class="radio"><input type="radio" value="3" name="size">Показывать по 3<i></i></label>
+                                        <label class="radio"><input type="radio" value="5" name="size">Показывать по 5<i></i></label>
+                                        <label class="radio"><input type="radio" value="10" name="size">Показывать по 10<i></i></label>
                                     </div>
                                 </div>
                             </section>
@@ -88,9 +94,6 @@
                     </div>
                     <div class="clearfix"></div>
                 </div>
-
-                    <div class="pagination-holder clearfix" id="pagination">
-                </div>
             </div>
         </div>
     </div>
@@ -121,6 +124,12 @@ function getQueryParamsFromStorage() {
     return JSON.parse(sessionStorage.getItem('fullQueryParams'));
 }
 
+function renderSortingOptions() {
+    let currentSortingOptions = getQueryParamsFromStorage();
+    $("[value = " + currentSortingOptions.sortby + "]").attr('checked', true);
+    $("[value = " + currentSortingOptions.order + "]").attr('checked', true);
+    $("[value = " + currentSortingOptions.size + "]").attr('checked', true);
+}
 
 export default {
     name: 'showcase',
@@ -166,12 +175,46 @@ export default {
                 .catch(err => {
                     console.error(err); 
                 })     
-        },      
+        }, 
+        
+        scroll() {
+            window.onscroll = () => {
+                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
+                let queryParams = getQueryParamsFromStorage();
+                queryParams.page++;
+
+                if (bottomOfWindow) {
+                    AXIOS.get(`/parts`, {params: queryParams})
+                    .then(res => {
+                        console.log(res)
+                        if (res.data.content.length != 0) {
+                            createFullQueryParamsObject(queryParams, res)
+                            let parts = res.data.content
+
+                            for (let i in parts) {
+                                parts[i].imageName = ADDRESS + parts[i].imageName
+                                this.$data.parts.push(parts[i])
+                            }
+                        }   
+                    })
+                    .catch(err => {
+                        console.error(err); 
+                    }) 
+                }
+            };
+        },
+
+        
+    },
+
+    beforeMount() {
+        this.getCategoryById();
+        this.fetchPartsOnLoadByCategory();
     },
 
     mounted() {
-        this.getCategoryById();
-        this.fetchPartsOnLoadByCategory();
+        this.scroll();
+        renderSortingOptions();
     }
 }
 </script>
