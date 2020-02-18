@@ -16,7 +16,7 @@
                 <div class="prdt-top">
                     <div class="col-md-9 prdt-left" >
                         <div class="product-one" id="cards" >
-                            <div class="col-md-4 product-left p-left" v-for="part in parts" v-match-heights="{el: ['h3']}">
+                            <div class="col-md-4 product-left p-left" v-for="part in parts" v-match-heights="{el: ['h3']}" data-aos="slide-up" data-aos-offset="100" data-aos-easing="ease-out-back">
                                 <div class="product-main simpleCart_shelfItem">
                                     <a class="mask"><img class="img-responsive zoom-img" img :src="part.imageName" alt="" id="image"/></a>
                                     <div class="product-bottom">
@@ -112,8 +112,9 @@ function createFullQueryParamsObject(queryParams, fetchedData) {
         sortby: ((queryParams.sortby != null || undefined) ? queryParams.sortby : 'id'),
         order: ((queryParams.sortby != null || undefined) ? queryParams.order : 'asc')
     }
-    setQueryParamsToStorage(fullQueryParams)
     console.log(fullQueryParams)
+    setQueryParamsToStorage(fullQueryParams)
+    renderSortingOptions();
 }
 
 function setQueryParamsToStorage(fullQueryParams) {
@@ -148,7 +149,7 @@ export default {
             AXIOS.get('/categories', {params: {id: categoryId}})
             .then(res => {
                 let category = res.data;
-                console.log(category)
+                
                 this.$data.category = category
             })
             .catch(err => {
@@ -161,7 +162,7 @@ export default {
             
             AXIOS.get('/parts', { params: queryParams})
                 .then(res => {
-                    console.log(res)
+                    
                     let parts = res.data.content
                     createFullQueryParamsObject(queryParams, res)
 
@@ -169,7 +170,7 @@ export default {
                         parts[i].imageName = ADDRESS + parts[i].imageName
                     }
                 
-                    console.log(parts)
+                    
                     this.$data.parts = parts
                 })
                 .catch(err => {
@@ -186,9 +187,10 @@ export default {
                 if (bottomOfWindow) {
                     AXIOS.get(`/parts`, {params: queryParams})
                     .then(res => {
-                        console.log(res)
+                        
                         if (res.data.content.length != 0) {
                             createFullQueryParamsObject(queryParams, res)
+                            
                             let parts = res.data.content
 
                             for (let i in parts) {
@@ -214,7 +216,6 @@ export default {
 
     mounted() {
         this.scroll();
-        renderSortingOptions();
     }
 }
 </script>
