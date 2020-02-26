@@ -16,7 +16,7 @@
                 <div class="prdt-top">
                     <div class="col-md-9 prdt-left" >
                         <div class="product-one" id="cards" >
-                            <div class="col-md-4 product-left p-left" v-for="part in parts" v-match-heights="{el: ['h3']}" data-aos="slide-up" data-aos-offset="100" data-aos-easing="ease-out-back">
+                            <div class="col-md-4 product-left p-left" v-for="part in parts" v-match-heights="{el: ['h3']}">
                                 <div class="product-main simpleCart_shelfItem">
                                     <a class="mask"><img class="img-responsive zoom-img" img :src="part.imageName" alt="" id="image"/></a>
                                     <div class="product-bottom">
@@ -24,11 +24,21 @@
                                         <p id="partnumber">{{ part.partNumber }}</p>
                                         <h4><a class="item_add" href="#"><i></i></a> <span class=" item_price">$ 329</span></h4>
                                     </div>
-                                </div>
-                            </div>
+                                </div> 
+                            </div>    
+                        </div>
+                        
+                        <div class="morecont" v-if="parts.length < totalElements">
+                            <button class="learn-more" v-on:click="scroll">
+                                <span class="circle" aria-hidden="true">
+                                    <span class="icon arrow"></span>
+                                </span>
+                                <span class="button-text">еще ({{ totalElements - parts.length }})</span>
+                            </button>
                         </div>
                     </div>
-
+                    
+                    
                     <div class="col-md-3 prdt-right">
                         <div class="w_sidebar">
                             <section class="sky-form">
@@ -97,40 +107,12 @@
             </div>
         </div>
     </div>
+    
 </template>
 
 <script>
 import {AXIOS} from './http-common'
 import {ADDRESS} from './backend-address'
-
-
-function createFullQueryParamsObject(queryParams, fetchedData) {
-    let fullQueryParams = {
-        category: queryParams.category,
-        page: fetchedData.data.number,
-        size: fetchedData.data.size,
-        sortby: ((queryParams.sortby != null || undefined) ? queryParams.sortby : 'id'),
-        order: ((queryParams.sortby != null || undefined) ? queryParams.order : 'asc')
-    }
-    console.log(fullQueryParams)
-    setQueryParamsToStorage(fullQueryParams)
-    renderSortingOptions();
-}
-
-function setQueryParamsToStorage(fullQueryParams) {
-    sessionStorage.setItem('fullQueryParams', JSON.stringify(fullQueryParams));
-}
-
-function getQueryParamsFromStorage() {
-    return JSON.parse(sessionStorage.getItem('fullQueryParams'));
-}
-
-function renderSortingOptions() {
-    let currentSortingOptions = getQueryParamsFromStorage();
-    $("[value = " + currentSortingOptions.sortby + "]").attr('checked', true);
-    $("[value = " + currentSortingOptions.order + "]").attr('checked', true);
-    $("[value = " + currentSortingOptions.size + "]").attr('checked', true);
-}
 
 export default {
     name: 'showcase',
@@ -138,7 +120,17 @@ export default {
     data() {
         return {
             category: Object,
-            parts: []
+            parts: [],
+            disable: false,
+            queryParams: {
+                category: 1,
+                page: 0,
+                size: 3,
+                sortby: 'id',
+                order: 'asc'    
+            },
+            totalPages: 0,
+            totalElements: 0
         }
     },
 
@@ -162,60 +154,78 @@ export default {
             
             AXIOS.get('/parts', { params: queryParams})
                 .then(res => {
-                    
                     let parts = res.data.content
-                    createFullQueryParamsObject(queryParams, res)
 
                     for (let i in parts) {
                         parts[i].imageName = ADDRESS + parts[i].imageName
                     }
-                
                     
+                    this.setQueryParams(queryParams)
+                    this.renderSortingOptions();
+                    this.$data.totalPages = res.data.totalPages
                     this.$data.parts = parts
+                    this.$data.totalElements = res.data.totalElements
+                    console.log(res)
                 })
                 .catch(err => {
                     console.error(err); 
                 })     
         }, 
-        
-        scroll() {
-            window.onscroll = () => {
-                let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-                let queryParams = getQueryParamsFromStorage();
-                queryParams.page++;
 
-                if (bottomOfWindow) {
-                    AXIOS.get(`/parts`, {params: queryParams})
-                    .then(res => {
-                        
-                        if (res.data.content.length != 0) {
-                            createFullQueryParamsObject(queryParams, res)
-                            
-                            let parts = res.data.content
-
-                            for (let i in parts) {
-                                parts[i].imageName = ADDRESS + parts[i].imageName
-                                this.$data.parts.push(parts[i])
-                            }
-                        }   
-                    })
-                    .catch(err => {
-                        console.error(err); 
-                    }) 
-                }
-            };
+        setQueryParams(queryParams) {
+            if (queryParams.category != null || undefined)
+                this.$data.queryParams.category = queryParams.category
+            if (queryParams.page != null || undefined) 
+                this.$data.queryParams.page = queryParams.page
+            if (queryParams.size != null || undefined) 
+                this.$data.queryParams.size = queryParams.size
+            if (queryParams.sortby != null || undefined) 
+                this.$data.queryParams.sortby = queryParams.sortby
+            if (queryParams.order != null || undefined)
+                this.$data.queryParams.order = queryParams.order
+            console.log(this.$data.queryParams)
         },
 
+        renderSortingOptions() {
+            $("[value = " + this.$data.queryParams.sortby + "]").attr('checked', true);
+            $("[value = " + this.$data.queryParams.order + "]").attr('checked', true);
+            $("[value = " + this.$data.queryParams.size + "]").attr('checked', true);
+        },
         
+        scroll: function (event) {
+            let maxPage = this.$data.totalPages
+                
+            if (this.$data.queryParams.page === maxPage - 1) {
+                this.$data.disable = true;
+                return
+            }
+
+            this.$data.queryParams.page++;
+                    
+            AXIOS.get(`/parts`, {params: this.$data.queryParams})
+            .then(res => {          
+                if (res.data.content.length != 0) {         
+                    let parts = res.data.content
+
+                    for (let i in parts) {
+                        parts[i].imageName = ADDRESS + parts[i].imageName
+                        this.$data.parts.push(parts[i])
+                    }
+                    this.$data.totalPages = res.data.totalPages 
+                    this.$data.totalElements = res.data.totalElements
+                }   
+                console.log(res)
+            })
+            .catch(err => {
+                console.error(err); 
+                this.$data.queryParams.page--;
+            })  
+        }
     },
 
     beforeMount() {
         this.getCategoryById();
         this.fetchPartsOnLoadByCategory();
-    },
-
-    mounted() {
-        this.scroll();
     }
 }
 </script>
