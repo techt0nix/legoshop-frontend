@@ -1169,6 +1169,7 @@ a.mask {
 }
 
 
+
 .sort-block input[type=submit] {
     color: #000;
     padding: 6px 20px;
@@ -1180,6 +1181,8 @@ a.mask {
     margin: auto;
     position: absolute;
     left: 0; right: 0;
+    margin-top: 15px;
+    
 }
 .sort-block input[type=submit]:hover{
     background: #73B6E1;
@@ -3172,11 +3175,11 @@ button {
   font-size: inherit;
   font-family: inherit;
   font-family: 'Mukta', sans-serif;
-  font-size: 1rem;
+  font-size: 1.2rem;
   padding-bottom: 30px;
 }
 button.learn-more {
-  width: 12rem;
+  width: 14rem;
   height: auto;
 }
 button.learn-more .circle {
@@ -3247,4 +3250,10 @@ button:hover .button-text {
   color: #fff;
 }
 
-
+.control-form {
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    margin-right: 50px;
+    width: 6rem;
+}
