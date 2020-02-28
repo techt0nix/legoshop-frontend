@@ -5,15 +5,16 @@
                 <div class="breadcrumbs-main">
                     <ol class="breadcrumb">
                         <li><router-link to="/">Главная</router-link></li>
-                        <li class="active" id="category">{{ category.rusName }}</li>
+                        <li class="active" id="query">Поиск '{{ query }}'</li>
                     </ol>
                 </div>
             </div>
-        </div>    
-
+        </div>  
+    
         <div class="page-header">
             <div class="container">
-                <h1>Категория: {{ category.rusName }}</h1>
+                <h1 v-if="parts.length > 0">Результаты поиска '{{ query }}'</h1>
+                <h1 v-else>По запросу '{{query}}' ничего не найдено</h1>
             </div>
         </div>
 
@@ -30,7 +31,7 @@
                                     <div class="product-bottom">
                                         <h3 id="engname">{{ part.engName }}</h3>
                                         <p id="partnumber">{{ part.partNumber }}</p>
-                                        <h4><div role="button" tabindex="0" v-on:click="test(part, $event)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
+                                        <h4><div role="button" tabindex="0"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
                                     </div>
                                 </div> 
                             </div>    
@@ -45,7 +46,6 @@
                             </button>
                         </div>
                     </div>
-                    
                     
                     <div class="col-md-3 prdt-right">
                         <div class="w_sidebar">
@@ -121,23 +121,23 @@
 import {AXIOS} from './http-common'
 import {ADDRESS} from './backend-address'
 
-export default {
-    name: 'showcase',
 
+export default {
+    name: 'search',
+    
     data() {
         return {
-            category: Object,
+            query: '',
             parts: [],
             queryParams: {
-                category: 1,
+                query: '',
                 page: 0,
                 size: 3,
                 sortby: 'id',
-                order: 'asc'    
+                order: 'asc'   
             },
             totalPages: 0,
             totalElements: 0,
-            cart: [],
             settableSortingOptions: {
                 sortby: 'id',
                 order: 'asc',
@@ -147,20 +147,6 @@ export default {
     },
 
     methods: {
-        getCategoryById() {
-            let categoryId = this.$route.query.category;
-
-            AXIOS.get('/categories', {params: {id: categoryId}})
-            .then(res => {
-                let category = res.data;
-                
-                this.$data.category = category
-            })
-            .catch(err => {
-                console.error(err); 
-            })
-        },
-
         fetchParts(queryParams) {
             AXIOS.get('/parts', { params: queryParams})
                 .then(res => {
@@ -171,7 +157,7 @@ export default {
                     }
                     
                     this.setQueryParams(queryParams)
-                    this.renderSortingOptions();
+                    // this.renderSortingOptions();
                     this.$data.totalPages = res.data.totalPages
                     this.$data.parts = parts
                     this.$data.totalElements = res.data.totalElements
@@ -183,8 +169,8 @@ export default {
         }, 
 
         setQueryParams(queryParams) {
-            if (queryParams.category != null || undefined)
-                this.$data.queryParams.category = queryParams.category
+            if (queryParams.query != null || undefined)
+                this.$data.queryParams.query = queryParams.query
             if (queryParams.page != null || undefined) 
                 this.$data.queryParams.page = queryParams.page
             if (queryParams.size != null || undefined) 
@@ -196,12 +182,6 @@ export default {
             console.log(this.$data.queryParams)
         },
 
-        renderSortingOptions() {
-            this.$data.settableSortingOptions.sortby = this.$data.queryParams.sortby
-            this.$data.settableSortingOptions.order = this.$data.queryParams.order
-            this.$data.settableSortingOptions.size = this.$data.queryParams.size
-        },
-        
         scroll: function (event) {
             this.$data.queryParams.page++;
                     
@@ -225,9 +205,15 @@ export default {
             })  
         },
 
+        renderSortingOptions() {
+            this.$data.settableSortingOptions.sortby = this.$data.queryParams.sortby
+            this.$data.settableSortingOptions.order = this.$data.queryParams.order
+            this.$data.settableSortingOptions.size = this.$data.queryParams.size
+        },
+
         applySorting: function(event) {
             let queryParams =  {
-                category: this.$data.queryParams.category,
+                query: this.$data.queryParams.query,
                 page: 0,
                 size: this.$data.settableSortingOptions.size,
                 sortby: this.$data.settableSortingOptions.sortby,
@@ -236,15 +222,15 @@ export default {
             console.log(queryParams)
             this.fetchParts(queryParams)
         },
-
-        test: function(part, event) {
-            console.log(event.target.parentNode.parentNode.nextElementSibling.firstElementChild.value) 
-        }
     },
 
     beforeMount() {
-        this.getCategoryById();
-        this.fetchParts(this.$route.query);
+        this.$data.query = this.$route.query.query.toLowerCase()
+        console.log(this.$data.query)
+    },
+
+    mounted() {
+        this.fetchParts(this.$route.query)
     }
 }
 </script>

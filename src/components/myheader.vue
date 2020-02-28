@@ -89,8 +89,8 @@
                     </div>
                     <div class="col-md-3 header-right">
                         <div class="search-bar">
-                            <input type="text" value="Поиск" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Поиск';}">
-                            <input type="submit" value="">
+                            <input type="text"  v-model="search" placeholder="Поиск">
+                            <router-link :to="{ path: 'search', query: {query: search}}"><input type="submit" value=""></router-link>
                         </div>
                     </div>
                     <div class="clearfix"> </div>
@@ -102,6 +102,12 @@
 
 <script>
     export default {
-        name: 'myheader'
+        name: 'myheader',
+
+        data() {
+            return {
+                search: ''     
+            }
+        }
     }
 </script>

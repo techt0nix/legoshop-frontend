@@ -927,7 +927,7 @@ a.mask {
 /*--footer-end--*/
 /*--product-page-starts--*/
 .prdt{
-	padding:6em 0px;
+	padding:2em 0px;
 }
 .w_sidebar{
 	border: 1px solid #EBEBEB;
@@ -3256,4 +3256,21 @@ button:hover .button-text {
     right: 0;
     margin-right: 50px;
     width: 6rem;
+}
+
+
+.page-header {
+    padding-bottom: 0px;
+    margin-bottom: 4px;
+    margin-top: 0px
+}
+
+.page-header h1 {
+    font-size: 24px;
+    font-family: Lora-Regular;
+}
+
+.products-toolbar{
+    font-family: Lora-Regular;
+    font-size: 16px
 }

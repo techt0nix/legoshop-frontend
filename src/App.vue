@@ -1,7 +1,7 @@
 <template>
   <div id="example">
     <myheader></myheader>
-    <router-view></router-view>   
+    <router-view :key="$route.query.query"></router-view>   
     <myfooter></myfooter>
   </div>
 </template>
