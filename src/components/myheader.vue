@@ -9,10 +9,12 @@
                         <div class="cart box_1">
                             <a href="checkout.html">
                                 <div class="total">
-                                    <span class="simpleCart_total"></span></div>
+                                    <span class="simpleCart_total">{{ getCart }}</span></div>
                                 <img src="src/assets/static/images/cart-1.png" alt="" />
                             </a>
-                            <p><a href="javascript:;" class="simpleCart_empty">Очистить корзину</a></p>
+                            <p>
+                                <div role="button" tabindex="0" v-on:click="clearCart()" class="simpleCart_empty">Очистить корзину</div>
+                            </p>
                             <div class="clearfix"> </div>
                         </div>
                     </div>
@@ -101,13 +103,27 @@
 </template>
 
 <script>
-    export default {
-        name: 'myheader',
+import { mapGetters, mapActions } from 'vuex';
 
-        data() {
-            return {
-                search: ''     
-            }
+export default {
+    name: 'myheader',
+
+    data() {
+        return {
+            search: ''     
         }
+    },
+
+    computed: {
+        ...mapGetters([
+            'getCart'
+        ])
+    },
+
+    methods: {
+        ...mapActions([
+            'clearCart'
+        ])
     }
+}
 </script>

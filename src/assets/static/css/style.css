@@ -126,7 +126,7 @@ body a{
 .drop {
     margin-top: 10px;
 }
-a.simpleCart_empty {
+.simpleCart_empty {
     color: rgba(255, 255, 255, 0.6);
     font-family: 'Lato', sans-serif;
     font-size: 11px;
@@ -694,11 +694,23 @@ figure.effect-bubba:hover p,figure.effect-bubba:hover h2 {
     padding-left: 30px;
 }
 .product-bottom p {
-	font-size: 12px;
-    color: #999;
+	font-size: 14px;
+    color: #444;
     margin: 5px 0 0 0;
-    text-transform: uppercase;
 }
+
+.product-bottom #quantityAvailable {
+	font-size: 15px;
+    color: #006400;
+    margin: 5px 0 0 0;
+}
+
+.product-bottom #quantityNotAvailable {
+	font-size: 15px;
+    color:#FF0000;
+    margin: 5px 0 0 0;
+}
+
 .product-one:nth-child(2){
 	margin-top:0px;
 
@@ -1176,12 +1188,13 @@ a.mask {
     font-size: 15px;
     cursor: pointer;
     border: 1px solid #000;
-    background: none;
+    background: #fff;
     outline: none;
     margin: auto;
-    position: absolute;
+    position: relative;
     left: 0; right: 0;
-    margin-top: 15px;
+    box-sizing: border-box;
+    display: inline-block;
     
 }
 .sort-block input[type=submit]:hover{
@@ -3274,3 +3287,4 @@ button:hover .button-text {
     font-family: Lora-Regular;
     font-size: 16px
 }
+

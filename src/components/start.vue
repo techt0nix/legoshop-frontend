@@ -5,7 +5,7 @@
         <div class="product"> 
             <div class="container" style="padding-top: 0">
                 <div class="product-top">
-                    <div class="product-one" v-for="category in categories" v-match-heights="{el: ['h3']}">
+                    <div class="product-one" v-for="category in categories" :key="category.id" v-match-heights="{el: ['h3']}">
                         <div class="col-md-3 product-left">
                             <div class="product-main simpleCart_shelfItem">
                                 <router-link :to="{ path: 'parts', query: {category: category.id}}" class="mask"> <img class="img-responsive zoom-img" img :src="category.imageName"  alt="" />  </router-link>

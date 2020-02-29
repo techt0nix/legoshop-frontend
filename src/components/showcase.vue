@@ -11,13 +11,17 @@
             </div>
         </div>    
 
-        <div class="page-header">
-            <div class="container">
-                <h1>Категория: {{ category.rusName }}</h1>
+        <div class="container">
+            <div class="page-header">
+                <div class="container">
+                    <h1>Категория: {{ category.rusName }}</h1>
+                </div>
             </div>
         </div>
-
-        <nav class="products-toolbar" v-if="parts.length > 0"><div class="container">Показано 1 - {{ parts.length }} из {{ totalElements }}</div></nav>
+        
+        <div class="container">
+            <nav class="products-toolbar" v-if="parts.length > 0"><div class="container">Показано 1 - {{ parts.length }} из {{ totalElements }}</div></nav>
+        </div>
 
         <div class="prdt">
             <div class="container">
@@ -30,7 +34,9 @@
                                     <div class="product-bottom">
                                         <h3 id="engname">{{ part.engName }}</h3>
                                         <p id="partnumber">{{ part.partNumber }}</p>
-                                        <h4><div role="button" tabindex="0" v-on:click="test(part, $event)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
+                                        <p id="quantityAvailable" v-if="part.quantity > 0">В наличии: {{ part.quantity }}</p>
+                                        <p id="quantityNotAvailable" v-else>Нет в наличии</p>
+                                        <h4><div role="button" tabindex="0" v-on:click="addItem(part)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
                                     </div>
                                 </div> 
                             </div>    
@@ -46,7 +52,6 @@
                         </div>
                     </div>
                     
-                    
                     <div class="col-md-3 prdt-right">
                         <div class="w_sidebar">
                             <section class="sky-form">
@@ -56,6 +61,7 @@
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="id" name="sort">По id<i></i></label>
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="eng_name" name="sort">По имени<i></i></label>
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="part_number" name="sort">По парт номеру<i></i></label>
+                                        <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="quantity" name="sort">По наличию<i></i></label>
                                     </div>
                                 </div>
                             </section>
@@ -105,9 +111,14 @@
                                 </ul>
                             </section>
 
-                            <div class="sort-block">
-                                <input type="submit" v-on:click="applySorting" value="Применить изменения" id="sortUsingCurrentValues">
-                            </div>
+                            <section class="sky-form">
+                                <h4>
+                                    <div class="sort-block">
+                                        <input type="submit" v-on:click="applySorting" value="Применить изменения" id="sortUsingCurrentValues">
+                                    </div>
+                                </h4>
+                                
+                            </section>
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -120,6 +131,7 @@
 <script>
 import {AXIOS} from './http-common'
 import {ADDRESS} from './backend-address'
+import { mapActions } from 'vuex';
 
 export default {
     name: 'showcase',
@@ -137,7 +149,6 @@ export default {
             },
             totalPages: 0,
             totalElements: 0,
-            cart: [],
             settableSortingOptions: {
                 sortby: 'id',
                 order: 'asc',
@@ -147,6 +158,10 @@ export default {
     },
 
     methods: {
+        ...mapActions([
+            'addItem'
+        ]),
+
         getCategoryById() {
             let categoryId = this.$route.query.category;
 
@@ -235,10 +250,6 @@ export default {
             }   
             console.log(queryParams)
             this.fetchParts(queryParams)
-        },
-
-        test: function(part, event) {
-            console.log(event.target.parentNode.parentNode.nextElementSibling.firstElementChild.value) 
         }
     },
 

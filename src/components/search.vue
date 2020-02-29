@@ -10,15 +10,19 @@
                 </div>
             </div>
         </div>  
-    
-        <div class="page-header">
-            <div class="container">
-                <h1 v-if="parts.length > 0">Результаты поиска '{{ query }}'</h1>
-                <h1 v-else>По запросу '{{query}}' ничего не найдено</h1>
+
+        <div class="container">
+            <div class="page-header">
+                <div class="container">
+                    <h1 v-if="parts.length > 0">Результаты поиска '{{ query }}'</h1>
+                    <h1 v-else>По запросу '{{query}}' ничего не найдено</h1>
+                </div>
             </div>
         </div>
-
-        <nav class="products-toolbar" v-if="parts.length > 0"><div class="container">Показано 1 - {{ parts.length }} из {{ totalElements }}</div></nav>
+        
+        <div class="container">
+            <nav class="products-toolbar" v-if="parts.length > 0"><div class="container">Показано 1 - {{ parts.length }} из {{ totalElements }}</div></nav>
+        </div>
 
         <div class="prdt">
             <div class="container">
@@ -31,7 +35,9 @@
                                     <div class="product-bottom">
                                         <h3 id="engname">{{ part.engName }}</h3>
                                         <p id="partnumber">{{ part.partNumber }}</p>
-                                        <h4><div role="button" tabindex="0"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
+                                        <p id="quantityAvailable" v-if="part.quantity > 0">В наличии: {{ part.quantity }}</p>
+                                        <p id="quantityNotAvailable" v-else>Нет в наличии</p>
+                                        <h4><div role="button" tabindex="0" v-on:click="addItem(part, 1)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
                                     </div>
                                 </div> 
                             </div>    
@@ -56,6 +62,7 @@
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="id" name="sort">По id<i></i></label>
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="eng_name" name="sort">По имени<i></i></label>
                                         <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="part_number" name="sort">По парт номеру<i></i></label>
+                                        <label class="radio"><input type="radio" v-model="settableSortingOptions.sortby" value="quantity" name="sort">По наличию<i></i></label>
                                     </div>
                                 </div>
                             </section>
@@ -120,7 +127,7 @@
 <script>
 import {AXIOS} from './http-common'
 import {ADDRESS} from './backend-address'
-
+import { mapActions } from 'vuex';
 
 export default {
     name: 'search',
@@ -147,6 +154,10 @@ export default {
     },
 
     methods: {
+        ...mapActions([
+            'addItem'
+        ]),
+        
         fetchParts(queryParams) {
             AXIOS.get('/parts', { params: queryParams})
                 .then(res => {
