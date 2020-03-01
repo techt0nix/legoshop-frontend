@@ -274,7 +274,7 @@ export default {
 
 function addToCartAnimation(event) {
     var cart = $('#cart_img');
-    var imgtodrag = $(event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild)
+    var imgtodrag = $(event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild).eq(0)
         if (imgtodrag) {
             var imgclone = imgtodrag.clone()
                 .offset({
@@ -294,7 +294,7 @@ function addToCartAnimation(event) {
                     'left': cart.offset().left + 10,
                     'width': 75,
                     'height': 75
-            }, 100, 'easeInOutExpo');
+            }, 1000, 'easeInOutExpo');
             
             // setTimeout(function () {
             //     cart.effect("shake", {
@@ -304,7 +304,7 @@ function addToCartAnimation(event) {
  
             imgclone.animate({
                 'width': 0,
-                    'height': 0
+                'height': 0
             }, function () {
                 $(this).detach()
             });

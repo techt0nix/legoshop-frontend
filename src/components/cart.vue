@@ -6,7 +6,7 @@
                     <h2>Корзина</h2>
                 </div>
                 <div class="ckeckout-top">
-                    <div class="cart-items">
+                    <div class="cart-items" v-if="getTotalCartItems > 0">
                         <h3>Товары ({{ getTotalCartItems }})</h3>
                     
                         <div class="in-check" >
@@ -29,7 +29,8 @@
                                 <div class="clearfix"> </div>
                             </ul>
                         </div>
-                    </div>  
+                    </div>
+                    <div class="cart-items" v-else><h3>Корзина пуста</h3></div>
                 </div>
 		    </div>
 	    </div>
