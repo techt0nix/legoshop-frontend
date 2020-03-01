@@ -6,7 +6,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 --*/
 body{
 	background:#fff;
-	font-family: 'Lato-Regular';
+    font-family: 'Lato-Regular';
 }
 body a{
 	transition: 0.5s all;
@@ -36,6 +36,7 @@ body a{
     text-align: center;
     padding: 25px 0 20px 0px;
     border-bottom: 1px solid #DEDEDE;
+    margin-top: 55px;
 }
 .logo a h1 {
     font-size: 32px;
@@ -53,6 +54,9 @@ body a{
 .top-header {
     background: #000;
     padding: 10px 0px;
+    position: fixed; top: 0; left: 0;
+    width: 100%;
+    z-index: 9999;
 }
 .search-bar input[type="text"] {
 	width: 100%;
@@ -1564,7 +1568,7 @@ a.mask {
 /*--account-end--*/
 /*--start-checkout--*/
 .ckeckout{
-	padding:6em 0px;
+	padding:2em 0px;
 }
 .close1,.close2,.close3{
 	background: url('../images/close.png') no-repeat 0px 0px;
@@ -2030,6 +2034,7 @@ h3.ghj {
 }
 .top-header {
     padding: 7px 0px;
+    
 }
 .header-bottom {
     padding: 11px 0px;

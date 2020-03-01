@@ -36,7 +36,7 @@
                                         <p id="partnumber">{{ part.partNumber }}</p>
                                         <p id="quantityAvailable" v-if="part.quantity > 0">В наличии: {{ part.quantity }}</p>
                                         <p id="quantityNotAvailable" v-else>Нет в наличии</p>
-                                        <h4><div role="button" tabindex="0" v-on:click="addItem(part)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
+                                        <h4><div role="button" tabindex="0" v-on:click="addProductToCart(part, $event)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
                                     </div>
                                 </div> 
                             </div>    
@@ -250,6 +250,19 @@ export default {
             }   
             console.log(queryParams)
             this.fetchParts(queryParams)
+        },
+
+        addProductToCart(product, event) {
+            let res = {
+                success: false
+            }
+            let params = [product, res]
+
+            this.addItem(params)
+            if (res.success) {
+                console.log("OK!!!!")
+                addToCartAnimation(event);
+            } 
         }
     },
 
@@ -257,5 +270,44 @@ export default {
         this.getCategoryById();
         this.fetchParts(this.$route.query);
     }
+}
+
+function addToCartAnimation(event) {
+    var cart = $('#cart_img');
+    var imgtodrag = $(event.target.parentNode.parentNode.parentNode.previousElementSibling.firstElementChild)
+        if (imgtodrag) {
+            var imgclone = imgtodrag.clone()
+                .offset({
+                top: imgtodrag.offset().top,
+                left: imgtodrag.offset().left
+            })
+                .css({
+                'opacity': '0.5',
+                    'position': 'absolute',
+                    'height': '150px',
+                    'width': '150px',
+                    'z-index': '100'
+            })
+                .appendTo($('body'))
+                .animate({
+                'top': cart.offset().top + 10,
+                    'left': cart.offset().left + 10,
+                    'width': 75,
+                    'height': 75
+            }, 100, 'easeInOutExpo');
+            
+            // setTimeout(function () {
+            //     cart.effect("shake", {
+            //         times: 2
+            //     }, 200);
+            // }, 1500);
+ 
+            imgclone.animate({
+                'width': 0,
+                    'height': 0
+            }, function () {
+                $(this).detach()
+            });
+        }
 }
 </script>

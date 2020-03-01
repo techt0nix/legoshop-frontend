@@ -7,11 +7,11 @@
                     </div>
                     <div class="col-md-6 top-header-left">
                         <div class="cart box_1">
-                            <a href="checkout.html">
+                            <router-link to="/cart">
                                 <div class="total">
-                                    <span class="simpleCart_total">{{ getCart }}</span></div>
-                                <img src="src/assets/static/images/cart-1.png" alt="" />
-                            </a>
+                                    <span class="simpleCart_total">{{ getTotalCartItems }}</span></div>
+                                <img src="src/assets/static/images/cart-1.png" alt="" id="cart_img"/>
+                            </router-link>
                             <p>
                                 <div role="button" tabindex="0" v-on:click="clearCart()" class="simpleCart_empty">Очистить корзину</div>
                             </p>
@@ -116,7 +116,7 @@ export default {
 
     computed: {
         ...mapGetters([
-            'getCart'
+            'getTotalCartItems'
         ])
     },
 
