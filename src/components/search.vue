@@ -280,13 +280,13 @@ function addToCartAnimation(event) {
                     'left': cart.offset().left + 10,
                     'width': 75,
                     'height': 75
-            }, 100, 'easeInOutExpo');
+            }, 1000, 'easeInOutExpo');
             
-            // setTimeout(function () {
-            //     cart.effect("shake", {
-            //         times: 2
-            //     }, 200);
-            // }, 1500);
+            setTimeout(function () {
+                cart.effect("shake", {
+                    times: 2
+                }, 400);
+            }, 1500);
  
             imgclone.animate({
                 'width': 0,

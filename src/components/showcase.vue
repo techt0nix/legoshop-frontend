@@ -36,12 +36,17 @@
                                         <p id="partnumber">{{ part.partNumber }}</p>
                                         <p id="quantityAvailable" v-if="part.quantity > 0">В наличии: {{ part.quantity }}</p>
                                         <p id="quantityNotAvailable" v-else>Нет в наличии</p>
-                                        <h4><div role="button" tabindex="0" v-on:click="addProductToCart(part, $event)"><i></i><span class="item_price">₽ {{ part.currentPrice }}</span></div></h4>
+                                        <h4>
+                                            <div role="button" tabindex="0" v-on:click="addProductToCart(part, $event)">
+                                                <i></i>
+                                                <span class="item_price">₽ {{ part.currentPrice }}</span>
+                                            </div>
+                                        </h4>
                                     </div>
                                 </div> 
                             </div>    
                         </div>
-                        
+
                         <div class="morecont" v-if="parts.length < totalElements">
                             <button class="learn-more" v-on:click="scroll">
                                 <span class="circle" aria-hidden="true">
@@ -296,11 +301,11 @@ function addToCartAnimation(event) {
                     'height': 75
             }, 1000, 'easeInOutExpo');
             
-            // setTimeout(function () {
-            //     cart.effect("shake", {
-            //         times: 2
-            //     }, 200);
-            // }, 1500);
+            setTimeout(function () {
+                cart.effect("shake", {
+                    times: 2
+                }, 400);
+            }, 1500);
  
             imgclone.animate({
                 'width': 0,
