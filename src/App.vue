@@ -30,7 +30,7 @@ export default {
                 showRefresh: true,
             }})
             .catch(err => {})
-          }
+        }
         throw error;
         return Promise.reject(error.response.data);
       });

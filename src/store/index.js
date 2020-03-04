@@ -80,7 +80,8 @@ export default new Vuex.Store ({
 
         AUTH_LOGOUT: (state) => {
             state.status = '',
-            state.token = ''
+            state.token = '',
+            state.user = {}
         }
     },
 
@@ -139,10 +140,13 @@ export default new Vuex.Store ({
             })
         },
 
-        logout({state, commit}) {
-            commit('AUTH_LOGOUT')
-            localStorage.removeItem('token')
-            delete AXIOS.defaults.headers.common['Authorization']
+        logout({state, commit}){
+            return new Promise((resolve, reject) => {
+                commit('AUTH_LOGOUT')
+                localStorage.removeItem('token')
+                delete AXIOS.defaults.headers.common['Authorization']
+                resolve()
+            })
         }
     }
 })

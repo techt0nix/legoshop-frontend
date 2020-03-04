@@ -130,11 +130,18 @@ export default {
     methods: {
         ...mapActions([
             'clearCart',
-            'logout'
         ]),
 
-        doLogout() {
-            
+        logout: function () {
+            this.$store.dispatch('logout')
+            .then(() => {
+                this.$router.replace({
+                    name: 'start',
+                    query: {
+                        showRefresh: true,
+                    }})
+            .catch(err => {})
+            })
         }
     }
 }
