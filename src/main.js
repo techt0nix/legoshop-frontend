@@ -4,9 +4,15 @@ import router from './router'
 import VueMatchHeights from 'vue-match-heights'
 import VeeValidate from 'vee-validate';
 import store from './store'
+import {AXIOS} from './components/http-common'
 
 Vue.use(VueMatchHeights, {disabled: [768]});
 Vue.use(VeeValidate);
+
+const token = localStorage.getItem('token')
+if (token) {
+  AXIOS.defaults.headers.common.Authorization  = 'Bearer '+ token;
+}
 
 new Vue({
   el: '#app',

@@ -301,11 +301,11 @@ function addToCartAnimation(event) {
                     'height': 75
             }, 1000, 'easeInOutExpo');
             
-            setTimeout(function () {
-                cart.effect("shake", {
-                    times: 2
-                }, 400);
-            }, 1500);
+            // setTimeout(function () {
+            //     cart.effect("shake", {
+            //         times: 2
+            //     }, 400);
+            // }, 1500);
  
             imgclone.animate({
                 'width': 0,

@@ -6,10 +6,12 @@ import search from './components/search'
 import cart from './components/cart'
 import signin from './components/signin'
 import signup from './components/signup'
+import account from './components/account'
+import store from './store/index'
 
 Vue.use(Router)
 
-export default new Router({
+let router = new Router({
     mode: 'history',
     routes: [
         {
@@ -46,6 +48,15 @@ export default new Router({
             path: '/signup',
             name: 'signup',
             component: signup
+        },
+
+        {
+            path: '/account',
+            name: 'account',
+            component: account,
+            meta: { 
+                requiresAuth: true
+            }
         }
     ],
 
@@ -53,3 +64,18 @@ export default new Router({
         return { x: 0, y: 0 }
     }
 })
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(record => record.meta.requiresAuth)) {
+        if (store.getters.isLoggedIn) {
+            next()
+            return
+        }
+        next('/signin') 
+            
+    } else {
+        next() 
+    }
+})
+
+export default router

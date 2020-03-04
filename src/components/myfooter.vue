@@ -24,7 +24,7 @@
                     <div class="col-md-3 infor-left">
                         <h3>Мой аккаунт</h3>
                         <ul>
-                            <li><a href="account.html"><p>My Account</p></a></li>
+                            <li><router-link to="/account"><p>My Account</p></router-link></li>
                             <li><a href="#"><p>My Credit slips</p></a></li>
                             <li><a href="#"><p>My Merchandise returns</p></a></li>
                             <li><a href="#"><p>My Personal info</p></a></li>

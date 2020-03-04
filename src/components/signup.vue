@@ -22,7 +22,7 @@
                         <input placeholder="Пароль" v-model="user.password" v-validate="{ required: true, min: 8, max: 20 }" name="password" type="password" ref="password" tabindex="4">
                         <div v-if="submitted && errors.has('password')" class="invalid-feedback">{{ errors.first('password') }}</div>
 
-                        <input placeholder="Подтвердите пароль" v-validate="'required|confirmed:password|min:8|max: 20'" name="password_confirmation" type="password" tabindex="4">
+                        <input placeholder="Подтвердите пароль" v-validate="'required|confirmed:password'" name="password_confirmation" type="password" tabindex="4">
                         <div v-if="submitted && errors.has('password_confirmation')" class="invalid-feedback">{{ errors.first('password_confirmation') }}</div>
                     </div>
                     <div class="clearfix"></div>
@@ -39,6 +39,30 @@
             <div class="modal-content">
                 <span class="close" v-on:click="this.closeErrorWindow">&times;</span>
                 <p>{{ errorMessage }}</p>
+            </div>
+        </div>
+
+        <!-- The Modal -->
+        <div id="successWindow" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>{{ successMessage }}</p>
+                <div class="success-checkmark">
+                    <div class="check-icon">
+                        <span class="icon-line line-tip"></span>
+                        <span class="icon-line line-long"></span>
+                        <div class="icon-circle"></div>
+                        <div class="icon-fix"></div>
+                    </div>
+                </div>
+                <section class="sky-form">
+                    <h4>
+                        <div class="sort-block" id="redirect">
+                            <input type="submit" v-on:click="redirectToSignin" value="Перейти ко входу">
+                        </div>
+                    </h4>           
+                </section>
             </div>
         </div>
     </div>
@@ -60,7 +84,8 @@ export default {
                 name: ''
             },
             submitted: false,
-            errorMessage: ''
+            errorMessage: '',
+            successMessage: null
         }
     },
 
@@ -73,17 +98,19 @@ export default {
                     AXIOS.post('/auth/signup', this.$data.user)
                     .then(res => {
                         console.log(res)
-                        this.$router.push('start');
+                        this.$data.successMessage = res.data.message
+                        openSuccessWindow()
                     })
                     .catch(err => {
                         this.$data.errorMessage = err.response.data.message
-                        console.error(err.response); 
                         openErrorWindow()
                     }) 
                 }
             });
-            
-            // this.$router.push('start');
+        },
+
+        redirectToSignin() {
+            this.$router.push('signin')
         },
 
         closeErrorWindow() {
@@ -93,8 +120,6 @@ export default {
         }
     }
 }
-
-
 
 function openErrorWindow() {
     var modal = document.getElementById("errorWindow");
@@ -106,5 +131,18 @@ window.onclick = function(event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }
+}
+
+function openSuccessWindow() {
+    var modal = document.getElementById("successWindow");    
+    modal.style.display = "block";
+    playSuccessAnimation();
+}
+
+function playSuccessAnimation() {
+    $(".check-icon").hide();
+    setTimeout(function () {
+        $(".check-icon").show();
+    }, 10);
 }
 </script>

@@ -16,6 +16,12 @@
                                 <div role="button" tabindex="0" v-on:click="clearCart()" class="simpleCart_empty">Очистить корзину</div>
                             </p>
                             <div class="clearfix"> </div>
+                            <p>
+                                {{ isLoggedIn }}
+                            </p>
+                            <div v-if="isLoggedIn"> 
+                                <input type="submit" v-on:click="logout">
+                            </div>
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -110,20 +116,26 @@ export default {
 
     data() {
         return {
-            search: ''     
+            search: ''    
         }
     },
 
     computed: {
         ...mapGetters([
-            'getTotalCartItems'
+            'getTotalCartItems',
+            'isLoggedIn'
         ])
     },
 
     methods: {
         ...mapActions([
-            'clearCart'
-        ])
+            'clearCart',
+            'logout'
+        ]),
+
+        doLogout() {
+            
+        }
     }
 }
 </script>
